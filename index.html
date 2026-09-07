@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium ADHD Dose Tracker</title>
+    <title>Premium Dynamic ADHD Dose Tracker</title>
     <style>
         :root {
             --bg-color: #141416;
@@ -12,6 +12,8 @@
             --text-muted: #767680;
             --accent-check: #a855f7;
             --border-ui: #3a3a40;
+            --alert-warn: #f59e0b;
+            --alert-success: #10b981;
         }
 
         body {
@@ -23,291 +25,375 @@
             align-items: center;
             justify-content: center;
             min-height: 100vh;
+            padding: 1rem 0;
         }
 
         .container {
             width: 90%;
-            max-width: 380px;
+            max-width: 400px;
             background: var(--container-bg);
             padding: 2rem;
             border-radius: 24px;
             border: 1px solid var(--border-ui);
             box-shadow: 0 30px 60px rgba(0,0,0,0.5);
             position: relative;
+            box-sizing: border-box;
         }
 
-        h1 {
-            font-size: 1.3rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            margin-bottom: 0.3rem;
+        h1 { 
+            font-size: 1.3rem; 
+            font-weight: 300; 
+            letter-spacing: 2px; 
+            margin-bottom: 0.3rem; 
+            text-align: center; 
+        }
+        
+        .subtitle { 
+            font-size: 0.8rem; 
+            color: var(--text-muted); 
+            text-align: center; 
+            margin-bottom: 1.5rem; 
+        }
+
+        .alert-banner {
+            background: #27272a;
+            border: 1px solid var(--border-ui);
+            border-radius: 12px;
+            padding: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: bold;
             text-align: center;
+            margin-bottom: 1.5rem;
+            line-height: 1.4;
+            transition: all 0.4s ease;
         }
+        
+        .alert-banner.warn { background: rgba(245, 158, 11, 0.1); border-color: var(--alert-warn); color: #fbbf24; }
+        .alert-banner.success { background: rgba(16, 185, 129, 0.1); border-color: var(--alert-success); color: #34d399; }
 
-        .subtitle {
+        .section-title {
             font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             color: var(--text-muted);
-            text-align: center;
-            margin-bottom: 2rem;
+            margin: 1.5rem 0 0.5rem 0;
+            border-bottom: 1px solid var(--border-ui);
+            padding-bottom: 4px;
         }
 
-        .tracker-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
+        .tracker-list { display: flex; flex-direction: column; gap: 12px; }
 
         .dose-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: var(--bg-color);
-            padding: 1rem;
-            border-radius: 16px;
+            padding: 0.9rem;
+            border-radius: 14px;
             border: 1px solid var(--border-ui);
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
-
-        .dose-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+        
+        .dose-info { display: flex; align-items: center; gap: 12px; max-width: 80%; }
+        .dose-name { font-size: 1rem; font-weight: 400; word-break: break-word; }
+        
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: #ef4444;
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0 4px;
+            opacity: 0.4;
+            transition: opacity 0.2s;
         }
+        .dose-row:hover .delete-btn { opacity: 1; }
 
-        .dose-time {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-        }
-
-        .dose-name {
-            font-size: 1.05rem;
-            font-weight: 400;
-        }
-
-        /* Custom Interactive Touch Checkbox Button */
         .check-btn {
             background: transparent;
             border: 2px solid var(--border-ui);
             color: transparent;
-            width: 44px;
-            height: 44px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
         }
 
-        .dose-row.taken {
-            border-color: var(--accent-check);
-            background: rgba(168, 85, 247, 0.03);
-        }
+        .dose-row.taken { border-color: var(--accent-check); background: rgba(168, 85, 247, 0.02); }
+        .dose-row.taken .check-btn { background: var(--accent-check); border-color: var(--accent-check); color: #FFF; }
+        .dose-row.taken .dose-name { text-decoration: line-through; color: var(--text-muted); }
 
-        .dose-row.taken .check-btn {
-            background: var(--accent-check);
-            border-color: var(--accent-check);
-            color: #FFFFFF;
-        }
-
-        .dose-row.taken .dose-name {
-            text-decoration: line-through;
-            color: var(--text-muted);
-        }
-
-        .reset-text {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            text-align: center;
+        .add-box {
             margin-top: 2rem;
-            letter-spacing: 0.5px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 16px;
+            border: 1px dashed var(--border-ui);
         }
-
-        .gate-screen {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #141416;
-            border-radius: 24px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            padding: 2rem;
-            box-sizing: border-box;
-        }
-
-        input[type="password"] {
+        
+        .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
+        
+        input[type="text"], select {
             background: #000;
             border: 1px solid var(--border-ui);
             color: #fff;
-            padding: 0.7rem;
-            font-size: 0.9rem;
+            padding: 0.6rem;
+            font-size: 0.85rem;
             border-radius: 8px;
             outline: none;
-            width: 100%;
-            text-align: center;
-            margin-bottom: 1rem;
+            box-sizing: border-box;
         }
-
-        .verify-btn {
-            background: #fff;
-            color: #000;
+        input[type="text"] { flex: 2; }
+        select { flex: 1; }
+        
+        .add-btn {
+            background: var(--text-main);
+            color: var(--bg-color);
             border: none;
-            padding: 0.7rem;
-            font-size: 0.9rem;
-            border-radius: 20px;
+            padding: 0.6rem;
+            font-size: 0.85rem;
             font-weight: bold;
+            border-radius: 8px;
             width: 100%;
             cursor: pointer;
         }
 
-        .etsy-link {
-            display: inline-block;
-            margin-top: 1.5rem;
-            font-size: 0.75rem;
-            color: #ffa500;
-            text-decoration: none;
-        }
+        .reset-text { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 1.5rem; }
+        .gate-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #141416; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 2rem; box-sizing: border-box; }
+        input[type="password"] { background: #000; border: 1px solid var(--border-ui); color: #fff; padding: 0.7rem; font-size: 0.9rem; border-radius: 8px; outline: none; width: 100%; text-align: center; margin-bottom: 1rem; }
+        .verify-btn { background: #fff; color: #000; border: none; padding: 0.7rem; font-size: 0.9rem; border-radius: 20px; font-weight: bold; width: 100%; cursor: pointer; }
+        .etsy-link { display: inline-block; margin-top: 1.5rem; font-size: 0.75rem; color: #ffa500; text-decoration: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Secure Login Gate -->
+        <!-- Secure Access Lock Gate -->
         <div id="authGate" class="gate-screen">
-            <h2 style="font-weight: 300; letter-spacing: 2px; font-size: 1.1rem; margin-bottom: 0.5rem;">DOSE VERIFICATION</h2>
-            <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1.5rem; line-height: 1.4;">Please enter your personal license code found inside your Etsy purchase download sheet.</p>
+            <h2 style="font-weight:300; letter-spacing:2px; font-size:1.1rem; margin-bottom:0.5rem;">DOSE VERIFICATION</h2>
+            <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin-bottom:1.5rem; line-height:1.4;">Please enter your personal license code found inside your Etsy purchase download sheet.</p>
             <input type="password" id="passKey" placeholder="Enter Access Key...">
             <button id="unlockBtn" class="verify-btn">UNLOCK LOG</button>
-            <div id="gateError" style="color: #ef4444; font-size: 0.8rem; margin-top: 1rem; visibility: hidden;">Invalid Key. Try again.</div>
+            <div id="gateError" style="color:#ef4444; font-size:0.8rem; margin-top:1rem; visibility:hidden;">Invalid Key. Try again.</div>
             <a href="https://etsy.com" target="_blank" class="etsy-link">🛍️ Purchase Key at Our Etsy Shop</a>
         </div>
 
-        <!-- Main Protected Dashboard Area -->
+        <!-- Protected Dynamic Tracker Layout -->
         <div id="appInterface" style="opacity: 0.1; pointer-events: none;">
             <h1>DAILY DOSE LOG</h1>
-            <div class="subtitle">Simple tracking to answer: "Did I take it?"</div>
+            <div class="subtitle">Customizable tracking built for your schedule</div>
 
-            <div class="tracker-grid">
-                <!-- Dose 1 -->
-                <div class="dose-row" id="row1">
-                    <div class="dose-info">
-                        <span class="dose-time">🌅 Morning Dose</span>
-                        <span class="dose-name">Medication / Supplement A</span>
-                    </div>
-                    <button class="check-btn" onclick="toggleDose('row1')">✓</button>
-                </div>
+            <div id="alertBanner" class="alert-banner">Initializing Assistant...</div>
 
-                <!-- Dose 2 -->
-                <div class="dose-row" id="row2">
-                    <div class="dose-info">
-                        <span class="dose-time">☀️ Midday Dose</span>
-                        <span class="dose-name">Medication / Supplement B</span>
-                    </div>
-                    <button class="check-btn" onclick="toggleDose('row2')">✓</button>
-                </div>
+            <div class="section-title">🌅 Morning Routine</div>
+            <div id="morningList" class="tracker-list"></div>
 
-                <!-- Dose 3 -->
-                <div class="dose-row" id="row3">
-                    <div class="dose-info">
-                        <span class="dose-time">🌙 Evening Dose</span>
-                        <span class="dose-name">Medication / Supplement C</span>
-                    </div>
-                    <button class="check-btn" onclick="toggleDose('row3')">✓</button>
+            <div class="section-title">☀️ Midday Routine</div>
+            <div id="middayList" class="tracker-list"></div>
+
+            <div class="section-title">🌙 Evening Routine</div>
+            <div id="eveningList" class="tracker-list"></div>
+
+            <!-- Dynamic Input Form -->
+            <div class="add-box">
+                <div class="input-row">
+                    <input type="text" id="newMedName" placeholder="Pill / Supplement Name..." maxlength="32">
+                    <select id="newMedTime">
+                        <option value="morning">Morning</option>
+                        <option value="midday">Midday</option>
+                        <option value="evening">Evening</option>
+                    </select>
                 </div>
+                <button class="add-btn" onclick="addNewMedication()">+ ADD TO ROUTINE</button>
             </div>
 
-            <p class="reset-text">🔄 System auto-resets completely clean at midnight.</p>
+            <p class="reset-text">🔄 Checked circles auto-reset clean at midnight. Items stay saved.</p>
         </div>
     </div>
     <script>
-        const authGate = document.getElementById('authGate');
-        const appInterface = document.getElementById('appInterface');
-        const passKey = document.getElementById('passKey');
-        const unlockBtn = document.getElementById('unlockBtn');
-        const gateError = document.getElementById('gateError');
+        const authGate = document.getElementById('authGate'), appInterface = document.getElementById('appInterface'), passKey = document.getElementById('passKey'), unlockBtn = document.getElementById('unlockBtn'), gateError = document.getElementById('gateError'), alertBanner = document.getElementById('alertBanner');
+        let medications = [];
 
-        // 🔐 Security Access Validation
         unlockBtn.addEventListener('click', () => {
             if (passKey.value.trim() === 'TAKEN_TODAY') {
                 authGate.style.display = 'none';
                 appInterface.style.opacity = '1';
                 appInterface.style.pointerEvents = 'all';
-            } else {
-                gateError.style.visibility = 'visible';
-                passKey.value = '';
-            }
+                updateSmartAlerts();
+            } else { gateError.style.visibility = 'visible'; passKey.value = ''; }
         });
+        passKey.addEventListener('focus', () => { gateError.style.visibility = 'hidden'; });
 
-        passKey.addEventListener('focus', () => {
-            gateError.style.visibility = 'hidden';
-        });
+        // 🧠 Core Adaptive Clock & Count Alert Engine
+        function updateSmartAlerts() {
+            const currentHour = new Date().getHours();
+            alertBanner.className = 'alert-banner';
 
-        // 💾 Local Storage Memory Engine
-        function loadDoseState() {
-            const today = new Date().toDateString();
-            const savedDate = localStorage.getItem('doseTrackerDate');
-
-            // Reset circles if the calendar date has advanced to a new day
-            if (savedDate !== today) {
-                localStorage.clear();
-                localStorage.setItem('doseTrackerDate', today);
+            if (medications.length === 0) {
+                alertBanner.innerText = "📋 Your schedule is empty. Add your medications below!";
                 return;
             }
 
-            ['row1', 'row2', 'row3'].forEach(id => {
-                if (localStorage.getItem(id) === 'true') {
-                    document.getElementById(id).classList.add('taken');
+            const morningMeds = medications.filter(m => m.time === 'morning');
+            const middayMeds = medications.filter(m => m.time === 'midday');
+            const eveningMeds = medications.filter(m => m.time === 'evening');
+
+            const missingMorning = morningMeds.filter(m => !m.taken).length;
+            const missingMidday = middayMeds.filter(m => !m.taken).length;
+            const missingEvening = eveningMeds.filter(m => !m.taken).length;
+
+            if (currentHour < 12) {
+                if (morningMeds.length === 0) {
+                    alertBanner.innerText = "🌅 Clear morning! Add items or check later routines.";
+                } else if (missingMorning > 0) {
+                    alertBanner.classList.add('warn');
+                    alertBanner.innerText = `⏳ Good morning! You have ${missingMorning} Morning Dose${missingMorning > 1 ? 's' : ''} left to log.`;
+                } else {
+                    alertBanner.classList.add('success');
+                    alertBanner.innerText = "✅ Morning routine 100% complete! Great job.";
                 }
+            } 
+            else if (currentHour >= 12 && currentHour < 17) {
+                if (missingMorning > 0) {
+                    alertBanner.classList.add('warn');
+                    alertBanner.innerText = `⚠️ ATTENTION: You forgot to log ${missingMorning} Morning Dose${missingMorning > 1 ? 's' : ''}!`;
+                } else if (middayMeds.length === 0) {
+                    alertBanner.innerText = "☀️ Clear afternoon! Check back during your evening routine.";
+                } else if (missingMidday > 0) {
+                    alertBanner.classList.add('warn');
+                    alertBanner.innerText = `⏳ Time check: You have ${missingMidday} Midday Dose${missingMissed > 1 ? 's' : ''} left to log.`;
+                } else {
+                    alertBanner.classList.add('success');
+                    alertBanner.innerText = "✅ Midday routine completed successfully!";
+                }
+            } 
+            else {
+                if (missingMorning > 0 || missingMidday > 0) {
+                    const totalMissed = missingMorning + missingMidday;
+                    alertBanner.classList.add('warn');
+                    alertBanner.innerText = `⚠️ WARNING: You missed ${totalMissed} earlier routine dose${totalMissed > 1 ? 's' : ''} today!`;
+                } else if (eveningMeds.length === 0) {
+                    alertBanner.innerText = "🌙 Clear evening! Rest well tonight.";
+                } else if (missingEvening > 0) {
+                    alertBanner.classList.add('warn');
+                    alertBanner.innerText = `⏳ Night check: You have ${missingEvening} Evening Dose${missingEvening > 1 ? 's' : ''} left to log.`;
+                } else {
+                    alertBanner.classList.add('success');
+                    alertBanner.innerText = "🎉 Perfect day! All daily medication routines logged successfully.";
+                }
+            }
+        }
+
+        // 💾 Phone Cache Storage Memory Systems
+        function loadDashboard() {
+            const today = new Date().toDateString();
+            const savedDate = localStorage.getItem('medTrackerDate');
+            const storedMeds = localStorage.getItem('medicationList');
+
+            if (storedMeds) {
+                medications = JSON.parse(storedMeds);
+            } else {
+                medications = [
+                    { id: 'm1', name: 'Morning Pill Placeholder', time: 'morning', taken: false },
+                    { id: 'm2', name: 'Midday Pill Placeholder', time: 'midday', taken: false }
+                ];
+                saveToCache();
+            }
+
+            if (savedDate !== today) {
+                medications.forEach(m => m.taken = false);
+                localStorage.setItem('medTrackerDate', today);
+                saveToCache();
+            }
+
+            renderLists();
+        }
+
+        function renderLists() {
+            const morningList = document.getElementById('morningList'), middayList = document.getElementById('middayList'), eveningList = document.getElementById('eveningList');
+            morningList.innerHTML = ''; middayList.innerHTML = ''; eveningList.innerHTML = '';
+
+            medications.forEach(med => {
+                const row = document.createElement('div');
+                row.className = `dose-row ${med.taken ? 'taken' : ''}`;
+                row.innerHTML = `
+                    <div class="dose-info">
+                        <button class="delete-btn" onclick="deleteMedication('${med.id}')">✕</button>
+                        <span class="dose-name">${med.name}</span>
+                    </div>
+                    <button class="check-btn" onclick="toggleMedState('${med.id}')">✓</button>
+                `;
+                if (med.time === 'morning') morningList.appendChild(row);
+                if (med.time === 'midday') middayList.appendChild(row);
+                if (med.time === 'evening') eveningList.appendChild(row);
             });
+
+            if (morningList.innerHTML === '') morningList.innerHTML = '<div style="font-size:0.8rem; color:#444; padding:0.5rem;">No items set</div>';
+            if (middayList.innerHTML === '') middayList.innerHTML = '<div style="font-size:0.8rem; color:#444; padding:0.5rem;">No items set</div>';
+            if (eveningList.innerHTML === '') eveningList.innerHTML = '<div style="font-size:0.8rem; color:#444; padding:0.5rem;">No items set</div>';
+
+            updateSmartAlerts();
         }
 
-        function toggleDose(rowId) {
-            const row = document.getElementById(rowId);
-            const isTaken = row.classList.toggle('taken');
+        function addNewMedication() {
+            const nameInput = document.getElementById('newMedName'), timeSelect = document.getElementById('newMedTime');
+            const name = nameInput.value.trim();
+            if (!name) return;
+
+            const newMed = { id: 'med_' + Date.now(), name: name, time: timeSelect.value, taken: false };
+            medications.push(newMed);
+            nameInput.value = '';
             
-            // Save state directly to the phone's built-in browser memory cache
-            localStorage.setItem(rowId, isTaken);
-            
-            // Play a crisp tactile audio feedback tap
-            if (isTaken) playTapSound();
+            saveToCache();
+            renderLists();
         }
 
-        // 🔊 Pure Synth High-Volume Tactile Sound Engine
+        function deleteMedication(id) {
+            medications = medications.filter(m => m.id !== id);
+            saveToCache();
+            renderLists();
+        }
+
+        function toggleMedState(id) {
+            const med = medications.find(m => m.id === id);
+            if (med) {
+                med.taken = !med.taken;
+                if (med.taken) playTapSound();
+                saveToCache();
+                renderLists();
+            }
+        }
+
+        function saveToCache() {
+            localStorage.setItem('medicationList', JSON.stringify(medications));
+            localStorage.setItem('medTrackerDate', new Date().toDateString());
+        }
+
         function playTapSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'triangle';
-                oscillatorFrequency = 523.25; // Clean, high C note for satisfying tactile click
-                osc.frequency.setValueAtTime(oscillatorFrequency, audioCtx.currentTime);
-                
+                const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
                 gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.08);
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
             } catch (e) {}
         }
 
-        // 🔄 Automatic Midnight Checker Loop
         setInterval(() => {
             const today = new Date().toDateString();
-            if (localStorage.getItem('doseTrackerDate') !== today) {
-                loadDoseState();
-            }
+            if (localStorage.getItem('medTrackerDate') !== today) { loadDashboard(); } 
+            else { updateSmartAlerts(); }
         }, 60000);
 
-        // Run hardware memory fetch on launch
-        window.onload = loadDoseState;
+        window.onload = loadDashboard;
     </script>
 </body>
 </html>
