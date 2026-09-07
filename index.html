@@ -3,29 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Dynamic ADHD Dose Tracker</title>
+    <title>Premium Personal ADHD Daily Dose Log</title>
     <style>
         :root {
-            --bg-color: #141416;
-            --container-bg: #1e1e22;
-            --text-main: #f4f4f6;
-            --text-muted: #767680;
-            --accent-check: #a855f7;
-            --border-ui: #3a3a40;
-            --alert-warn: #f59e0b;
-            --alert-success: #10b981;
+            /* Calming ADHD-Friendly Soft Palette */
+            --bg-color: #f2efeb;          /* Soft neutral warm earth tone */
+            --container-bg: #e8e4dc;      /* Gentle light gray-clay backdrop */
+            --text-main: #333335;         /* Soft dark charcoal (no blinding contrast) */
+            --text-muted: #73726d;        /* Muted earth gray */
+            --accent-check: #6b8e23;      /* Calming muted moss green */
+            --accent-skip: #6a8caf;       /* Soft slate blue for bypassing blocks */
+            --border-ui: #cfcbbf;         /* Light clay border matrix */
+            --alert-success: #556b2f;     /* Dark olive green for success text */
         }
 
         body {
             margin: 0;
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 1rem 0;
+            padding: 1.5rem 0;
+            transition: all 0.5s ease;
         }
 
         .container {
@@ -33,19 +35,20 @@
             max-width: 400px;
             background: var(--container-bg);
             padding: 2rem;
-            border-radius: 24px;
+            border-radius: 28px;
             border: 1px solid var(--border-ui);
-            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06);
             position: relative;
             box-sizing: border-box;
         }
 
         h1 { 
-            font-size: 1.3rem; 
+            font-size: 1.25rem; 
             font-weight: 300; 
             letter-spacing: 2px; 
             margin-bottom: 0.3rem; 
             text-align: center; 
+            color: var(--text-main);
         }
         
         .subtitle { 
@@ -53,99 +56,133 @@
             color: var(--text-muted); 
             text-align: center; 
             margin-bottom: 1.5rem; 
+            font-style: italic;
         }
 
+        /* Ambient Assistant Status Panel */
         .alert-banner {
-            background: #27272a;
+            background: #ded9cd;
             border: 1px solid var(--border-ui);
-            border-radius: 12px;
-            padding: 0.8rem;
+            border-radius: 16px;
+            padding: 0.9rem;
             font-size: 0.85rem;
-            font-weight: bold;
+            font-weight: 500;
             text-align: center;
             margin-bottom: 1.5rem;
             line-height: 1.4;
+            color: var(--text-main);
             transition: all 0.4s ease;
         }
-        
-        .alert-banner.warn { background: rgba(245, 158, 11, 0.1); border-color: var(--alert-warn); color: #fbbf24; }
-        .alert-banner.success { background: rgba(16, 185, 129, 0.1); border-color: var(--alert-success); color: #34d399; }
+        .alert-banner.success { 
+            background: rgba(107, 142, 35, 0.15); 
+            border-color: var(--accent-check); 
+            color: var(--alert-success); 
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 1.5rem 0 0.6rem 0;
+            border-bottom: 1px solid var(--border-ui);
+            padding-bottom: 6px;
+        }
 
         .section-title {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             text-transform: uppercase;
             letter-spacing: 1px;
             color: var(--text-muted);
-            margin: 1.5rem 0 0.5rem 0;
-            border-bottom: 1px solid var(--border-ui);
-            padding-bottom: 4px;
+            font-weight: bold;
         }
 
-        .tracker-list { display: flex; flex-direction: column; gap: 12px; }
+        /* Gentle "No Dose Today" Toggle Link */
+        .skip-toggle-btn {
+            background: transparent;
+            border: none;
+            color: var(--accent-skip);
+            font-size: 0.72rem;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            font-weight: 500;
+        }
+        .skip-toggle-btn.skipped-active {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-style: italic;
+        }
+
+        .tracker-list { display: flex; flex-direction: column; gap: 10px; }
+        
+        /* Block out a section smoothly if user clicks "No Dose Today" */
+        .tracker-list.section-bypassed {
+            opacity: 0.45;
+            pointer-events: none;
+        }
 
         .dose-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: var(--bg-color);
-            padding: 0.9rem;
-            border-radius: 14px;
+            background: #fdfdfb;
+            padding: 0.85rem;
+            border-radius: 16px;
             border: 1px solid var(--border-ui);
-            transition: all 0.2s ease;
+            transition: all 0.25s ease;
         }
         
         .dose-info { display: flex; align-items: center; gap: 12px; max-width: 80%; }
-        .dose-name { font-size: 1rem; font-weight: 400; word-break: break-word; }
+        .dose-name { font-size: 0.95rem; font-weight: 400; color: var(--text-main); }
         
         .delete-btn {
             background: transparent;
             border: none;
-            color: #ef4444;
+            color: #cc5a5a;
             font-size: 1.1rem;
             cursor: pointer;
             padding: 0 4px;
-            opacity: 0.4;
+            opacity: 0.25;
             transition: opacity 0.2s;
         }
-        .dose-row:hover .delete-btn { opacity: 1; }
+        .dose-row:hover .delete-btn { opacity: 0.8; }
 
         .check-btn {
             background: transparent;
             border: 2px solid var(--border-ui);
             color: transparent;
-            width: 38px;
-            height: 38px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1rem;
-            transition: all 0.2s ease;
+            font-size: 1rem;
+            transition: all 0.25s ease;
             flex-shrink: 0;
         }
 
-        .dose-row.taken { border-color: var(--accent-check); background: rgba(168, 85, 247, 0.02); }
+        .dose-row.taken { border-color: var(--accent-check); background: rgba(107, 142, 35, 0.04); }
         .dose-row.taken .check-btn { background: var(--accent-check); border-color: var(--accent-check); color: #FFF; }
         .dose-row.taken .dose-name { text-decoration: line-through; color: var(--text-muted); }
 
+        /* Setup Form Blocks */
         .add-box {
             margin-top: 2rem;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(255, 255, 255, 0.4);
             padding: 1rem;
-            border-radius: 16px;
+            border-radius: 18px;
             border: 1px dashed var(--border-ui);
         }
-        
         .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        
         input[type="text"], select {
-            background: #000;
+            background: #fff;
             border: 1px solid var(--border-ui);
-            color: #fff;
+            color: var(--text-main);
             padding: 0.6rem;
             font-size: 0.85rem;
-            border-radius: 8px;
+            border-radius: 10px;
             outline: none;
             box-sizing: border-box;
         }
@@ -154,53 +191,65 @@
         
         .add-btn {
             background: var(--text-main);
-            color: var(--bg-color);
+            color: #fff;
             border: none;
             padding: 0.6rem;
             font-size: 0.85rem;
-            font-weight: bold;
-            border-radius: 8px;
+            font-weight: 500;
+            border-radius: 10px;
             width: 100%;
             cursor: pointer;
+            transition: background 0.2s;
         }
+        .add-btn:hover { background: #444446; }
 
-        .reset-text { font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 1.5rem; }
-        .gate-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #141416; border-radius: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 2rem; box-sizing: border-box; }
-        input[type="password"] { background: #000; border: 1px solid var(--border-ui); color: #fff; padding: 0.7rem; font-size: 0.9rem; border-radius: 8px; outline: none; width: 100%; text-align: center; margin-bottom: 1rem; }
-        .verify-btn { background: #fff; color: #000; border: none; padding: 0.7rem; font-size: 0.9rem; border-radius: 20px; font-weight: bold; width: 100%; cursor: pointer; }
-        .etsy-link { display: inline-block; margin-top: 1.5rem; font-size: 0.75rem; color: #ffa500; text-decoration: none; }
+        .reset-text { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 1.5rem; letter-spacing: 0.3px; }
+        .gate-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); border-radius: 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 2rem; box-sizing: border-box; }
+        input[type="password"] { background: #fff; border: 1px solid var(--border-ui); color: var(--text-main); padding: 0.7rem; font-size: 0.9rem; border-radius: 10px; outline: none; width: 100%; text-align: center; margin-bottom: 1rem; }
+        .verify-btn { background: var(--text-main); color: #fff; border: none; padding: 0.7rem; font-size: 0.9rem; border-radius: 22px; font-weight: bold; width: 100%; cursor: pointer; }
+        .etsy-link { display: inline-block; margin-top: 1.5rem; font-size: 0.75rem; color: var(--accent-skip); text-decoration: underline; font-weight: 500; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- Secure Access Lock Gate -->
+        <!-- Secure Access Gate -->
         <div id="authGate" class="gate-screen">
-            <h2 style="font-weight:300; letter-spacing:2px; font-size:1.1rem; margin-bottom:0.5rem;">DOSE VERIFICATION</h2>
-            <p style="font-size:0.8rem; color:var(--text-muted); text-align:center; margin-bottom:1.5rem; line-height:1.4;">Please enter your personal license code found inside your Etsy purchase download sheet.</p>
-            <input type="password" id="passKey" placeholder="Enter Access Key...">
-            <button id="unlockBtn" class="verify-btn">UNLOCK LOG</button>
-            <div id="gateError" style="color:#ef4444; font-size:0.8rem; margin-top:1rem; visibility:hidden;">Invalid Key. Try again.</div>
-            <a href="https://etsy.com" target="_blank" class="etsy-link">🛍️ Purchase Key at Our Etsy Shop</a>
+            <h2 style="font-weight: 300; letter-spacing: 1px; font-size: 1.1rem; margin-bottom: 0.5rem;">DOSE LOG VERIFICATION</h2>
+            <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1.5rem; line-height: 1.4;">Please enter your personal license access key found inside your Etsy transaction file sheet.</p>
+            <input type="password" id="passKey" placeholder="Enter License Key...">
+            <button id="unlockBtn" class="verify-btn">UNLOCK REGISTER</button>
+            <div id="gateError" style="color: #cc5a5a; font-size: 0.8rem; margin-top: 1rem; visibility: hidden;">Invalid Key. Check spelling.</div>
+            <a href="https://etsy.com" target="_blank" class="etsy-link">🛍️ Purchase License Key at Our Etsy Shop</a>
         </div>
 
-        <!-- Protected Dynamic Tracker Layout -->
+        <!-- Protected Interactive Workboard Menu -->
         <div id="appInterface" style="opacity: 0.1; pointer-events: none;">
             <h1>DAILY DOSE LOG</h1>
-            <div class="subtitle">Customizable tracking built for your schedule</div>
+            <div class="subtitle">Calming accountability built for your routine</div>
 
-            <div id="alertBanner" class="alert-banner">Initializing Assistant...</div>
+            <div id="alertBanner" class="alert-banner">Initializing Logger...</div>
 
-            <div class="section-title">🌅 Morning Routine</div>
+            <!-- Morning Segment Zone -->
+            <div class="section-header">
+                <span class="section-title">🌅 Morning Routine</span>
+                <button class="skip-toggle-btn" id="skipMorningBtn" onclick="toggleSectionSkip('morning')">No Morning Dose</button>
+            </div>
             <div id="morningList" class="tracker-list"></div>
 
-            <div class="section-title">☀️ Midday Routine</div>
+            <!-- Midday Segment Zone -->
+            <div class="section-header">
+                <span class="section-title">☀️ Midday Routine</span>
+                <button class="skip-toggle-btn" id="skipMiddayBtn" onclick="toggleSectionSkip('midday')">No Midday Dose</button>
+            </div>
             <div id="middayList" class="tracker-list"></div>
 
-            <div class="section-title">🌙 Evening Routine</div>
+            <!-- Evening Segment Zone -->
+            <div class="section-header">
+                <span class="section-title">🌙 Evening Routine</span>
             <div id="eveningList" class="tracker-list"></div>
 
-            <!-- Dynamic Input Form -->
+            <!-- Minimalist Input Terminal Module -->
             <div class="add-box">
                 <div class="input-row">
                     <input type="text" id="newMedName" placeholder="Pill / Supplement Name..." maxlength="32">
@@ -210,190 +259,192 @@
                         <option value="evening">Evening</option>
                     </select>
                 </div>
-                <button class="add-btn" onclick="addNewMedication()">+ ADD TO ROUTINE</button>
+                <button class="add-btn" onclick="addNewMedication()">+ ADD TO DAILY LIST</button>
             </div>
 
-            <p class="reset-text">🔄 Checked circles auto-reset clean at midnight. Items stay saved.</p>
+            <p class="reset-text">🌱 All items remain saved. Clear checkmarks reset at midnight.</p>
         </div>
     </div>
+
     <script>
         const authGate = document.getElementById('authGate'), appInterface = document.getElementById('appInterface'), passKey = document.getElementById('passKey'), unlockBtn = document.getElementById('unlockBtn'), gateError = document.getElementById('gateError'), alertBanner = document.getElementById('alertBanner');
         let medications = [];
+        let skippedSections = { morning: false, midday: false, evening: false };
 
+        // 🔐 Security Verification Layout
         unlockBtn.addEventListener('click', () => {
             if (passKey.value.trim() === 'TAKEN_TODAY') {
                 authGate.style.display = 'none';
                 appInterface.style.opacity = '1';
                 appInterface.style.pointerEvents = 'all';
-                updateSmartAlerts();
+                updateTrackerAlerts();
             } else { gateError.style.visibility = 'visible'; passKey.value = ''; }
         });
         passKey.addEventListener('focus', () => { gateError.style.visibility = 'hidden'; });
 
-        // 🧠 Core Adaptive Clock & Count Alert Engine
-        function updateSmartAlerts() {
-            const currentHour = new Date().getHours();
+        // 🧠 Smart Non-Anxious Progress Tracker Logic
+        function updateTrackerAlerts() {
             alertBanner.className = 'alert-banner';
 
-            if (medications.length === 0) {
-                alertBanner.innerText = "📋 Your schedule is empty. Add your medications below!";
+            if (medications.length === 0 && !skippedSections.morning && !skippedSections.midday && !skippedSections.evening) {
+                alertBanner.innerText = "🌱 Welcome! Use the panel below to build your custom schedule.";
                 return;
             }
 
-            const morningMeds = medications.filter(m => m.time === 'morning');
-            const middayMeds = medications.filter(m => m.time === 'midday');
-            const eveningMeds = medications.filter(m => m.time === 'evening');
+            // Calculate active rows vs completed actions across each time category block
+            let totalActiveTasks = 0;
+            let totalCompletedTasks = 0;
 
-            const missingMorning = morningMeds.filter(m => !m.taken).length;
-            const missingMidday = middayMeds.filter(m => !m.taken).length;
-            const missingEvening = eveningMeds.filter(m => !m.taken).length;
+            ['morning', 'midday', 'evening'].forEach(timeBlock => {
+                if (!skippedSections[timeBlock]) {
+                    const blockMeds = medications.filter(m => m.time === timeBlock);
+                    totalActiveTasks += blockMeds.length;
+                    totalCompletedTasks += blockMeds.filter(m => m.taken).length;
+                }
+            });
 
-            if (currentHour < 12) {
-                if (morningMeds.length === 0) {
-                    alertBanner.innerText = "🌅 Clear morning! Add items or check later routines.";
-                } else if (missingMorning > 0) {
-                    alertBanner.classList.add('warn');
-                    alertBanner.innerText = `⏳ Good morning! You have ${missingMorning} Morning Dose${missingMorning > 1 ? 's' : ''} left to log.`;
-                } else {
-                    alertBanner.classList.add('success');
-                    alertBanner.innerText = "✅ Morning routine 100% complete! Great job.";
-                }
-            } 
-            else if (currentHour >= 12 && currentHour < 17) {
-                if (missingMorning > 0) {
-                    alertBanner.classList.add('warn');
-                    alertBanner.innerText = `⚠️ ATTENTION: You forgot to log ${missingMorning} Morning Dose${missingMorning > 1 ? 's' : ''}!`;
-                } else if (middayMeds.length === 0) {
-                    alertBanner.innerText = "☀️ Clear afternoon! Check back during your evening routine.";
-                } else if (missingMidday > 0) {
-                    alertBanner.classList.add('warn');
-                    alertBanner.innerText = `⏳ Time check: You have ${missingMidday} Midday Dose${missingMissed > 1 ? 's' : ''} left to log.`;
-                } else {
-                    alertBanner.classList.add('success');
-                    alertBanner.innerText = "✅ Midday routine completed successfully!";
-                }
-            } 
-            else {
-                if (missingMorning > 0 || missingMidday > 0) {
-                    const totalMissed = missingMorning + missingMidday;
-                    alertBanner.classList.add('warn');
-                    alertBanner.innerText = `⚠️ WARNING: You missed ${totalMissed} earlier routine dose${totalMissed > 1 ? 's' : ''} today!`;
-                } else if (eveningMeds.length === 0) {
-                    alertBanner.innerText = "🌙 Clear evening! Rest well tonight.";
-                } else if (missingEvening > 0) {
-                    alertBanner.classList.add('warn');
-                    alertBanner.innerText = `⏳ Night check: You have ${missingEvening} Evening Dose${missingEvening > 1 ? 's' : ''} left to log.`;
-                } else {
-                    alertBanner.classList.add('success');
-                    alertBanner.innerText = "🎉 Perfect day! All daily medication routines logged successfully.";
-                }
+            const remaining = totalActiveTasks - totalCompletedTasks;
+
+            if (remaining > 0) {
+                alertBanner.innerText = `⏳ You have ${remaining} routine dose${remaining > 1 ? 's' : ''} remaining to log today.`;
+            } else {
+                alertBanner.classList.add('success');
+                alertBanner.innerText = "🎉 All clear! Your personal daily routines are 100% complete today.";
             }
         }
 
-        // 💾 Phone Cache Storage Memory Systems
-        function loadDashboard() {
+        // 💾 Smart Local Browser Memory Persistence Logic
+        function loadStorageState() {
             const today = new Date().toDateString();
             const savedDate = localStorage.getItem('medTrackerDate');
             const storedMeds = localStorage.getItem('medicationList');
+            const storedSkips = localStorage.getItem('skippedSectionsLog');
 
-            if (storedMeds) {
-                medications = JSON.parse(storedMeds);
-            } else {
-                medications = [
-                    { id: 'm1', name: 'Morning Pill Placeholder', time: 'morning', taken: false },
-                    { id: 'm2', name: 'Midday Pill Placeholder', time: 'midday', taken: false }
-                ];
-                saveToCache();
-            }
+            if (storedMeds) medications = JSON.parse(storedMeds);
+            if (storedSkips) skippedSections = JSON.parse(storedSkips);
 
+            // Midnight Reset Scanner: Keep item setups but clear checkboxes cleanly
             if (savedDate !== today) {
                 medications.forEach(m => m.taken = false);
+                skippedSections = { morning: false, midday: false, evening: false };
                 localStorage.setItem('medTrackerDate', today);
-                saveToCache();
+                saveStateToCache();
             }
 
-            renderLists();
+            renderDashboard();
         }
 
-        function renderLists() {
-            const morningList = document.getElementById('morningList'), middayList = document.getElementById('middayList'), eveningList = document.getElementById('eveningList');
-            morningList.innerHTML = ''; middayList.innerHTML = ''; eveningList.innerHTML = '';
+        function renderDashboard() {
+            const listIds = { morning: 'morningList', midday: 'middayList', evening: 'eveningList' };
+            const btnIds = { morning: 'skipMorningBtn', midday: 'skipMiddayBtn', evening: 'skipEveningBtn' };
+            const labelNames = { morning: 'Morning', midday: 'Midday', evening: 'Night' };
 
-            medications.forEach(med => {
-                const row = document.createElement('div');
-                row.className = `dose-row ${med.taken ? 'taken' : ''}`;
-                row.innerHTML = `
-                    <div class="dose-info">
-                        <button class="delete-btn" onclick="deleteMedication('${med.id}')">✕</button>
-                        <span class="dose-name">${med.name}</span>
-                    </div>
-                    <button class="check-btn" onclick="toggleMedState('${med.id}')">✓</button>
-                `;
-                if (med.time === 'morning') morningList.appendChild(row);
-                if (med.time === 'midday') middayList.appendChild(row);
-                if (med.time === 'evening') eveningList.appendChild(row);
+            ['morning', 'midday', 'evening'].forEach(block => {
+                const listEl = document.getElementById(listIds[block]);
+                const btnEl = document.getElementById(btnIds[block]);
+                listEl.innerHTML = '';
+
+                if (skippedSections[block]) {
+                    listEl.classList.add('section-bypassed');
+                    btnEl.innerText = `Undo "No ${labelNames[block]}"`;
+                    btnEl.classList.add('skipped-active');
+                    listEl.innerHTML = `<div style="font-size:0.85rem; color:#8d8c87; font-style:italic; padding:0.5rem;">Section bypassed for today</div>`;
+                } else {
+                    listEl.classList.remove('section-bypassed');
+                    btnEl.innerText = `No ${labelNames[block]} Dose`;
+                    btnEl.classList.remove('skipped-active');
+
+                    const filtered = medications.filter(m => m.time === block);
+                    filtered.forEach(med => {
+                        const row = document.createElement('div');
+                        row.className = `dose-row ${med.taken ? 'taken' : ''}`;
+                        row.innerHTML = `
+                            <div class="dose-info">
+                                <button class="delete-btn" onclick="removeMedication('${med.id}')">✕</button>
+                                <span class="dose-name">${med.name}</span>
+                            </div>
+                            <button class="check-btn" onclick="toggleMedChecked('${med.id}')">✓</button>
+                        `;
+                        listEl.appendChild(row);
+                    });
+
+                    if (filtered.length === 0) {
+                        listEl.innerHTML = '<div style="font-size:0.8rem; color:#a29f96; padding:0.5rem; font-style:italic;">No items added</div>';
+                    }
+                }
             });
 
-            if (morningList.innerHTML === '') morningList.innerHTML = '<div style="font-size:0.8rem; color:#444; padding:0.5rem;">No items set</div>';
-            if (middayList.innerHTML === '') middayList.innerHTML = '<div style="font-size:0.8rem; color:#444; padding:0.5rem;">No items set</div>';
-            if (eveningList.innerHTML === '') eveningList.innerHTML = '<div style="font-size:0.8rem; color:#444; padding:0.5rem;">No items set</div>';
+            updateTrackerAlerts();
+        }
 
-            updateSmartAlerts();
+        // 🔄 Dynamic Bypass Code System
+        function toggleSectionSkip(sectionKey) {
+            skippedSections[sectionKey] = !skippedSections[sectionKey];
+            playAudioTick();
+            saveStateToCache();
+            renderDashboard();
         }
 
         function addNewMedication() {
             const nameInput = document.getElementById('newMedName'), timeSelect = document.getElementById('newMedTime');
-            const name = nameInput.value.trim();
-            if (!name) return;
+            const val = nameInput.value.trim();
+            if (!val) return;
 
-            const newMed = { id: 'med_' + Date.now(), name: name, time: timeSelect.value, taken: false };
-            medications.push(newMed);
+            const newItem = { id: 'med_' + Date.now(), name: val, time: timeSelect.value, taken: false };
+            medications.push(newItem);
             nameInput.value = '';
-            
-            saveToCache();
-            renderLists();
+
+            // Automatically turn off manual skips if user adds a physical pill to that block
+            skippedSections[timeSelect.value] = false;
+
+            saveStateToCache();
+            renderDashboard();
         }
 
-        function deleteMedication(id) {
+        function removeMedication(id) {
             medications = medications.filter(m => m.id !== id);
-            saveToCache();
-            renderLists();
+            saveStateToCache();
+            renderDashboard();
         }
 
-        function toggleMedState(id) {
-            const med = medications.find(m => m.id === id);
-            if (med) {
-                med.taken = !med.taken;
-                if (med.taken) playTapSound();
-                saveToCache();
-                renderLists();
+        function toggleMedChecked(id) {
+            const match = medications.find(m => m.id === id);
+            if (match) {
+                match.taken = !match.taken;
+                if (match.taken) playAudioTick();
+                saveStateToCache();
+                renderDashboard();
             }
         }
 
-        function saveToCache() {
+        function saveStateToCache() {
             localStorage.setItem('medicationList', JSON.stringify(medications));
+            localStorage.setItem('skippedSectionsLog', JSON.stringify(skippedSections));
             localStorage.setItem('medTrackerDate', new Date().toDateString());
         }
 
-        function playTapSound() {
+        // 🔊 Calming Triangle Tone Sound Engine (Audio Context Fix for Phone Sleep Mode)
+        function playAudioTick() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-                osc.type = 'triangle'; osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.08);
+                osc.type = 'triangle'; 
+                osc.frequency.setValueAtTime(440.00, audioCtx.currentTime); // Soft A-note focus frequency
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
                 osc.connect(gain); gain.connect(audioCtx.destination);
-                osc.start(); osc.stop(audioCtx.currentTime + 0.08);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.1);
             } catch (e) {}
         }
 
+        // Automatic System Clock Midnight Checker Ring
         setInterval(() => {
-            const today = new Date().toDateString();
-            if (localStorage.getItem('medTrackerDate') !== today) { loadDashboard(); } 
-            else { updateSmartAlerts(); }
-        }, 60000);
+            if (localStorage.getItem('medTrackerDate') !== new Date().toDateString()) {
+                loadStorageState();
+            }
+        }, 30000);
 
-        window.onload = loadDashboard;
+        window.onload = loadStorageState;
     </script>
 </body>
 </html>
