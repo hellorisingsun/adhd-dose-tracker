@@ -9,7 +9,7 @@
             /* Calming ADHD-Friendly Soft Palette */
             --bg-color: #f2efeb;          /* Soft neutral warm earth tone */
             --container-bg: #e8e4dc;      /* Gentle light gray-clay backdrop */
-            --text-main: #333335;         /* Soft dark charcoal (no blinding contrast) */
+            --text-main: #333335;         /* Soft dark charcoal */
             --text-muted: #73726d;        /* Muted earth gray */
             --accent-check: #6b8e23;      /* Calming muted moss green */
             --accent-skip: #6a8caf;       /* Soft slate blue for bypassing blocks */
@@ -21,18 +21,17 @@
             margin: 0;
             background-color: var(--bg-color);
             color: var(--text-main);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             min-height: 100vh;
-            padding: 1.5rem 0;
             transition: all 0.5s ease;
         }
 
         .container {
             width: 90%;
-            max-width: 400px;
+            max-width: 380px;
             background: var(--container-bg);
             padding: 2rem;
             border-radius: 28px;
@@ -42,24 +41,9 @@
             box-sizing: border-box;
         }
 
-        h1 { 
-            font-size: 1.25rem; 
-            font-weight: 300; 
-            letter-spacing: 2px; 
-            margin-bottom: 0.3rem; 
-            text-align: center; 
-            color: var(--text-main);
-        }
-        
-        .subtitle { 
-            font-size: 0.8rem; 
-            color: var(--text-muted); 
-            text-align: center; 
-            margin-bottom: 1.5rem; 
-            font-style: italic;
-        }
+        h1 { font-size: 1.25rem; font-weight: 300; letter-spacing: 2px; margin-bottom: 0.3rem; text-align: center; }
+        .subtitle { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1.5rem; font-style: italic; }
 
-        /* Ambient Assistant Status Panel */
         .alert-banner {
             background: #ded9cd;
             border: 1px solid var(--border-ui);
@@ -73,92 +57,50 @@
             color: var(--text-main);
             transition: all 0.4s ease;
         }
-        .alert-banner.success { 
-            background: rgba(107, 142, 35, 0.15); 
-            border-color: var(--accent-check); 
-            color: var(--alert-success); 
-        }
+        .alert-banner.success { background: rgba(107, 142, 35, 0.15); border-color: var(--accent-check); color: var(--alert-success); }
 
-        .section-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin: 1.5rem 0 0.6rem 0;
-            border-bottom: 1px solid var(--border-ui);
-            padding-bottom: 6px;
-        }
-
-        .section-title {
-            font-size: 0.78rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: var(--text-muted);
-            font-weight: bold;
-        }
-
-        /* Gentle "No Dose Today" Toggle Link */
-        .skip-toggle-btn {
-            background: transparent;
-            border: none;
-            color: var(--accent-skip);
-            font-size: 0.72rem;
-            cursor: pointer;
-            text-decoration: underline;
-            padding: 0;
-            font-weight: 500;
-        }
-        .skip-toggle-btn.skipped-active {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-style: italic;
-        }
-
-        .tracker-list { display: flex; flex-direction: column; gap: 10px; }
-        
-        /* Block out a section smoothly if user clicks "No Dose Today" */
-        .tracker-list.section-bypassed {
-            opacity: 0.45;
-            pointer-events: none;
-        }
+        .tracker-grid { display: flex; flex-direction: column; gap: 16px; }
 
         .dose-row {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: #fdfdfb;
-            padding: 0.85rem;
-            border-radius: 16px;
+            padding: 1.1rem;
+            border-radius: 18px;
             border: 1px solid var(--border-ui);
             transition: all 0.25s ease;
         }
-        
-        .dose-info { display: flex; align-items: center; gap: 12px; max-width: 80%; }
-        .dose-name { font-size: 0.95rem; font-weight: 400; color: var(--text-main); }
-        
-        .delete-btn {
+
+        .dose-info { display: flex; flex-direction: column; gap: 4px; }
+        .dose-time { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted); font-weight: bold; }
+        .dose-name { font-size: 1.05rem; font-weight: 400; color: var(--text-main); }
+
+        .action-container { display: flex; align-items: center; gap: 14px; }
+
+        .skip-toggle-btn {
             background: transparent;
             border: none;
-            color: #cc5a5a;
-            font-size: 1.1rem;
+            color: var(--accent-skip);
+            font-size: 0.75rem;
             cursor: pointer;
-            padding: 0 4px;
-            opacity: 0.25;
-            transition: opacity 0.2s;
+            text-decoration: underline;
+            padding: 0;
+            font-weight: 500;
         }
-        .dose-row:hover .delete-btn { opacity: 0.8; }
 
         .check-btn {
             background: transparent;
             border: 2px solid var(--border-ui);
             color: transparent;
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
+            font-size: 1.1rem;
             transition: all 0.25s ease;
             flex-shrink: 0;
         }
@@ -166,44 +108,14 @@
         .dose-row.taken { border-color: var(--accent-check); background: rgba(107, 142, 35, 0.04); }
         .dose-row.taken .check-btn { background: var(--accent-check); border-color: var(--accent-check); color: #FFF; }
         .dose-row.taken .dose-name { text-decoration: line-through; color: var(--text-muted); }
+        .dose-row.taken .skip-toggle-btn { display: none; }
 
-        /* Setup Form Blocks */
-        .add-box {
-            margin-top: 2rem;
-            background: rgba(255, 255, 255, 0.4);
-            padding: 1rem;
-            border-radius: 18px;
-            border: 1px dashed var(--border-ui);
-        }
-        .input-row { display: flex; gap: 8px; margin-bottom: 8px; }
-        input[type="text"], select {
-            background: #fff;
-            border: 1px solid var(--border-ui);
-            color: var(--text-main);
-            padding: 0.6rem;
-            font-size: 0.85rem;
-            border-radius: 10px;
-            outline: none;
-            box-sizing: border-box;
-        }
-        input[type="text"] { flex: 2; }
-        select { flex: 1; }
-        
-        .add-btn {
-            background: var(--text-main);
-            color: #fff;
-            border: none;
-            padding: 0.6rem;
-            font-size: 0.85rem;
-            font-weight: 500;
-            border-radius: 10px;
-            width: 100%;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
-        .add-btn:hover { background: #444446; }
+        .dose-row.skipped { border-color: var(--border-ui); background: rgba(118, 118, 128, 0.05); opacity: 0.5; }
+        .dose-row.skipped .check-btn { display: none; }
+        .dose-row.skipped .dose-name { font-style: italic; color: var(--text-muted); }
+        .dose-row.skipped .skip-toggle-btn { color: var(--text-muted); font-style: italic; text-decoration: none; }
 
-        .reset-text { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 1.5rem; letter-spacing: 0.3px; }
+        .reset-text { font-size: 0.72rem; color: var(--text-muted); text-align: center; margin-top: 2rem; letter-spacing: 0.3px; }
         .gate-screen { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); border-radius: 28px; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 100; padding: 2rem; box-sizing: border-box; }
         input[type="password"] { background: #fff; border: 1px solid var(--border-ui); color: var(--text-main); padding: 0.7rem; font-size: 0.9rem; border-radius: 10px; outline: none; width: 100%; text-align: center; margin-bottom: 1rem; }
         .verify-btn { background: var(--text-main); color: #fff; border: none; padding: 0.7rem; font-size: 0.9rem; border-radius: 22px; font-weight: bold; width: 100%; cursor: pointer; }
@@ -213,7 +125,7 @@
 <body>
 
     <div class="container">
-        <!-- Secure Access Gate -->
+        <!-- Secure Access Lock Gate -->
         <div id="authGate" class="gate-screen">
             <h2 style="font-weight: 300; letter-spacing: 1px; font-size: 1.1rem; margin-bottom: 0.5rem;">DOSE LOG VERIFICATION</h2>
             <p style="font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-bottom: 1.5rem; line-height: 1.4;">Please enter your personal license access key found inside your Etsy transaction file sheet.</p>
@@ -223,213 +135,153 @@
             <a href="https://etsy.com" target="_blank" class="etsy-link">🛍️ Purchase License Key at Our Etsy Shop</a>
         </div>
 
-        <!-- Protected Interactive Workboard Menu -->
+        <!-- Protected Interactive Workboard Layout -->
         <div id="appInterface" style="opacity: 0.1; pointer-events: none;">
             <h1>DAILY DOSE LOG</h1>
             <div class="subtitle">Calming accountability built for your routine</div>
 
             <div id="alertBanner" class="alert-banner">Initializing Logger...</div>
 
-            <!-- Morning Segment Zone -->
-            <div class="section-header">
-                <span class="section-title">🌅 Morning Routine</span>
-                <button class="skip-toggle-btn" id="skipMorningBtn" onclick="toggleSectionSkip('morning')">No Morning Dose</button>
-            </div>
-            <div id="morningList" class="tracker-list"></div>
-
-            <!-- Midday Segment Zone -->
-            <div class="section-header">
-                <span class="section-title">☀️ Midday Routine</span>
-                <button class="skip-toggle-btn" id="skipMiddayBtn" onclick="toggleSectionSkip('midday')">No Midday Dose</button>
-            </div>
-            <div id="middayList" class="tracker-list"></div>
-
-            <!-- Evening Segment Zone -->
-            <div class="section-header">
-                <span class="section-title">🌙 Evening Routine</span>
-            <div id="eveningList" class="tracker-list"></div>
-
-            <!-- Minimalist Input Terminal Module -->
-            <div class="add-box">
-                <div class="input-row">
-                    <input type="text" id="newMedName" placeholder="Pill / Supplement Name..." maxlength="32">
-                    <select id="newMedTime">
-                        <option value="morning">Morning</option>
-                        <option value="midday">Midday</option>
-                        <option value="evening">Evening</option>
-                    </select>
+            <div class="tracker-grid">
+                <!-- Morning Slot -->
+                <div class="dose-row" id="row1">
+                    <div class="dose-info">
+                        <span class="dose-time">🌅 Morning Routine</span>
+                        <span class="dose-name" id="name1">Morning Medication</span>
+                    </div>
+                    <div class="action-container">
+                        <button class="skip-toggle-btn" onclick="toggleSkip('row1')">No Dose</button>
+                        <button class="check-btn" onclick="toggleCheck('row1')">✓</button>
+                    </div>
                 </div>
-                <button class="add-btn" onclick="addNewMedication()">+ ADD TO DAILY LIST</button>
+
+                <!-- Midday Slot -->
+                <div class="dose-row" id="row2">
+                    <div class="dose-info">
+                        <span class="dose-time">☀️ Midday Routine</span>
+                        <span class="dose-name" id="name2">Midday Medication</span>
+                    </div>
+                    <div class="action-container">
+                        <button class="skip-toggle-btn" onclick="toggleSkip('row2')">No Dose</button>
+                        <button class="check-btn" onclick="toggleCheck('row2')">✓</button>
+                    </div>
+                </div>
+
+                <!-- Evening Slot -->
+                <div class="dose-row" id="row3">
+                    <div class="dose-info">
+                        <span class="dose-time">🌙 Evening Routine</span>
+                        <span class="dose-name" id="name3">Nighttime Medication</span>
+                    </div>
+                    <div class="action-container">
+                        <button class="skip-toggle-btn" onclick="toggleSkip('row3')">No Dose</button>
+                        <button class="check-btn" onclick="toggleCheck('row3')">✓</button>
+                    </div>
+                </div>
             </div>
 
-            <p class="reset-text">🌱 All items remain saved. Clear checkmarks reset at midnight.</p>
+            <p class="reset-text">🌱 Your layout stays saved forever. Checkmarks clear clean at midnight.</p>
         </div>
     </div>
-
     <script>
         const authGate = document.getElementById('authGate'), appInterface = document.getElementById('appInterface'), passKey = document.getElementById('passKey'), unlockBtn = document.getElementById('unlockBtn'), gateError = document.getElementById('gateError'), alertBanner = document.getElementById('alertBanner');
-        let medications = [];
-        let skippedSections = { morning: false, midday: false, evening: false };
+        
+        const rows = ['row1', 'row2', 'row3'];
 
-        // 🔐 Security Verification Layout
+        // Access Gate Controller
         unlockBtn.addEventListener('click', () => {
             if (passKey.value.trim() === 'TAKEN_TODAY') {
                 authGate.style.display = 'none';
                 appInterface.style.opacity = '1';
                 appInterface.style.pointerEvents = 'all';
-                updateTrackerAlerts();
+                updateBannerAlert();
             } else { gateError.style.visibility = 'visible'; passKey.value = ''; }
         });
         passKey.addEventListener('focus', () => { gateError.style.visibility = 'hidden'; });
 
-        // 🧠 Smart Non-Anxious Progress Tracker Logic
-        function updateTrackerAlerts() {
+        // 🧠 Non-Anxious Total Progress Accounting Engine
+        function updateBannerAlert() {
             alertBanner.className = 'alert-banner';
-
-            if (medications.length === 0 && !skippedSections.morning && !skippedSections.midday && !skippedSections.evening) {
-                alertBanner.innerText = "🌱 Welcome! Use the panel below to build your custom schedule.";
-                return;
-            }
-
-            // Calculate active rows vs completed actions across each time category block
-            let totalActiveTasks = 0;
-            let totalCompletedTasks = 0;
-
-            ['morning', 'midday', 'evening'].forEach(timeBlock => {
-                if (!skippedSections[timeBlock]) {
-                    const blockMeds = medications.filter(m => m.time === timeBlock);
-                    totalActiveTasks += blockMeds.length;
-                    totalCompletedTasks += blockMeds.filter(m => m.taken).length;
+            
+            let incompleteCount = 0;
+            rows.forEach(id => {
+                const isTaken = localStorage.getItem(id + '_taken') === 'true';
+                const isSkipped = localStorage.getItem(id + '_skipped') === 'true';
+                if (!isTaken && !isSkipped) {
+                    incompleteCount++;
                 }
             });
 
-            const remaining = totalActiveTasks - totalCompletedTasks;
-
-            if (remaining > 0) {
-                alertBanner.innerText = `⏳ You have ${remaining} routine dose${remaining > 1 ? 's' : ''} remaining to log today.`;
+            if (incompleteCount > 0) {
+                alertBanner.innerText = `⏳ You have ${incompleteCount} log slot${incompleteCount > 1 ? 's' : ''} remaining today.`;
             } else {
                 alertBanner.classList.add('success');
-                alertBanner.innerText = "🎉 All clear! Your personal daily routines are 100% complete today.";
+                alertBanner.innerText = "🎉 All clear! Your daily medication routines are 100% complete today.";
             }
         }
 
-        // 💾 Smart Local Browser Memory Persistence Logic
-        function loadStorageState() {
+        // 💾 Built-In Persistence Storage Management
+        function loadSavedState() {
             const today = new Date().toDateString();
             const savedDate = localStorage.getItem('medTrackerDate');
-            const storedMeds = localStorage.getItem('medicationList');
-            const storedSkips = localStorage.getItem('skippedSectionsLog');
 
-            if (storedMeds) medications = JSON.parse(storedMeds);
-            if (storedSkips) skippedSections = JSON.parse(storedSkips);
-
-            // Midnight Reset Scanner: Keep item setups but clear checkboxes cleanly
+            // Midnight Clock Check: Wipe daily metrics clean, leave layout completely safe
             if (savedDate !== today) {
-                medications.forEach(m => m.taken = false);
-                skippedSections = { morning: false, midday: false, evening: false };
+                rows.forEach(id => {
+                    localStorage.removeItem(id + '_taken');
+                    localStorage.removeItem(id + '_skipped');
+                });
                 localStorage.setItem('medTrackerDate', today);
-                saveStateToCache();
             }
 
-            renderDashboard();
-        }
-
-        function renderDashboard() {
-            const listIds = { morning: 'morningList', midday: 'middayList', evening: 'eveningList' };
-            const btnIds = { morning: 'skipMorningBtn', midday: 'skipMiddayBtn', evening: 'skipEveningBtn' };
-            const labelNames = { morning: 'Morning', midday: 'Midday', evening: 'Night' };
-
-            ['morning', 'midday', 'evening'].forEach(block => {
-                const listEl = document.getElementById(listIds[block]);
-                const btnEl = document.getElementById(btnIds[block]);
-                listEl.innerHTML = '';
-
-                if (skippedSections[block]) {
-                    listEl.classList.add('section-bypassed');
-                    btnEl.innerText = `Undo "No ${labelNames[block]}"`;
-                    btnEl.classList.add('skipped-active');
-                    listEl.innerHTML = `<div style="font-size:0.85rem; color:#8d8c87; font-style:italic; padding:0.5rem;">Section bypassed for today</div>`;
-                } else {
-                    listEl.classList.remove('section-bypassed');
-                    btnEl.innerText = `No ${labelNames[block]} Dose`;
-                    btnEl.classList.remove('skipped-active');
-
-                    const filtered = medications.filter(m => m.time === block);
-                    filtered.forEach(med => {
-                        const row = document.createElement('div');
-                        row.className = `dose-row ${med.taken ? 'taken' : ''}`;
-                        row.innerHTML = `
-                            <div class="dose-info">
-                                <button class="delete-btn" onclick="removeMedication('${med.id}')">✕</button>
-                                <span class="dose-name">${med.name}</span>
-                            </div>
-                            <button class="check-btn" onclick="toggleMedChecked('${med.id}')">✓</button>
-                        `;
-                        listEl.appendChild(row);
-                    });
-
-                    if (filtered.length === 0) {
-                        listEl.innerHTML = '<div style="font-size:0.8rem; color:#a29f96; padding:0.5rem; font-style:italic;">No items added</div>';
-                    }
+            // Apply saved layout visuals from cache
+            rows.forEach(id => {
+                const el = document.getElementById(id);
+                const btnEl = el.querySelector('.skip-toggle-btn');
+                
+                if (localStorage.getItem(id + '_taken') === 'true') {
+                    el.classList.add('taken');
+                } else if (localStorage.getItem(id + '_skipped') === 'true') {
+                    el.classList.add('skipped');
+                    btnEl.innerText = 'Undo Skip';
                 }
             });
 
-            updateTrackerAlerts();
+            updateBannerAlert();
         }
 
-        // 🔄 Dynamic Bypass Code System
-        function toggleSectionSkip(sectionKey) {
-            skippedSections[sectionKey] = !skippedSections[sectionKey];
-            playAudioTick();
-            saveStateToCache();
-            renderDashboard();
+        function toggleCheck(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('skipped')) return; // Ignore checks on skipped blocks
+
+            const isCheckActive = el.classList.toggle('taken');
+            localStorage.setItem(id + '_taken', isCheckActive);
+            
+            if (isCheckActive) playSoftTick();
+            updateBannerAlert();
         }
 
-        function addNewMedication() {
-            const nameInput = document.getElementById('newMedName'), timeSelect = document.getElementById('newMedTime');
-            const val = nameInput.value.trim();
-            if (!val) return;
+        function toggleSkip(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('taken')) return; // Ignore skips on checked blocks
 
-            const newItem = { id: 'med_' + Date.now(), name: val, time: timeSelect.value, taken: false };
-            medications.push(newItem);
-            nameInput.value = '';
-
-            // Automatically turn off manual skips if user adds a physical pill to that block
-            skippedSections[timeSelect.value] = false;
-
-            saveStateToCache();
-            renderDashboard();
+            const isSkipActive = el.classList.toggle('skipped');
+            const btnEl = el.querySelector('.skip-toggle-btn');
+            
+            localStorage.setItem(id + '_skipped', isSkipActive);
+            btnEl.innerText = isSkipActive ? 'Undo Skip' : 'No Dose';
+            
+            playSoftTick();
+            updateBannerAlert();
         }
 
-        function removeMedication(id) {
-            medications = medications.filter(m => m.id !== id);
-            saveStateToCache();
-            renderDashboard();
-        }
-
-        function toggleMedChecked(id) {
-            const match = medications.find(m => m.id === id);
-            if (match) {
-                match.taken = !match.taken;
-                if (match.taken) playAudioTick();
-                saveStateToCache();
-                renderDashboard();
-            }
-        }
-
-        function saveStateToCache() {
-            localStorage.setItem('medicationList', JSON.stringify(medications));
-            localStorage.setItem('skippedSectionsLog', JSON.stringify(skippedSections));
-            localStorage.setItem('medTrackerDate', new Date().toDateString());
-        }
-
-        // 🔊 Calming Triangle Tone Sound Engine (Audio Context Fix for Phone Sleep Mode)
-        function playAudioTick() {
+        // 🔊 ADHD Auditory Tap Solfeggio Focus Engine
+        function playSoftTick() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioCtx.createOscillator(), gain = audioCtx.createGain();
-                osc.type = 'triangle'; 
-                osc.frequency.setValueAtTime(440.00, audioCtx.currentTime); // Soft A-note focus frequency
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(440.00, audioCtx.currentTime); // 440Hz clear acoustic focal vibration
                 gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1);
                 osc.connect(gain); gain.connect(audioCtx.destination);
@@ -437,14 +289,14 @@
             } catch (e) {}
         }
 
-        // Automatic System Clock Midnight Checker Ring
+        // Clock scanning background interval loop
         setInterval(() => {
             if (localStorage.getItem('medTrackerDate') !== new Date().toDateString()) {
-                loadStorageState();
+                loadSavedState();
             }
         }, 30000);
 
-        window.onload = loadStorageState;
+        window.onload = loadSavedState;
     </script>
 </body>
 </html>
